@@ -1,0 +1,233 @@
+@font-face {
+  font-family: 'Six Hands Black';
+  src: url('/fonts/SixHandsBlack.ttf');
+  font-display: block;
+}
+@font-face {
+  font-family: 'Better Faster';
+  src: url('/fonts/BetterFaster.otf');
+  font-display: block;
+}
+@font-face {
+  font-family: 'Whortie';
+  src: url('/fonts/Whortle.ttf');
+  font-display: block;
+}
+@font-face {
+  font-family: 'Portobesto Caps';
+  src: url('/fonts/Portobesto.ttf');
+  font-display: block;
+}
+@font-face {
+  font-family: 'Artificial Intelligence';
+  src: url('/fonts/ia.otf');
+  font-display: block;
+}
+@font-face {
+  font-family: 'Brosign Brush';
+  src: url('/fonts/BrosignBrush.ttf');
+  font-display: block;
+}
+@font-face {
+  font-family: 'WC Mano Negra';
+  src: url('/fonts/WCManoNegraBta.otf');
+  font-display: block;
+}
+
+body {
+  background: #000;
+}
+
+.heroe {
+  box-sizing: border-box;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  position: relative;
+}
+
+/* sombra preta na parte de baixo da tela */
+.heroe::after {
+  content: '';
+  position: absolute;
+  z-index: 2; /* por cima da montanha e do fotógrafo, abaixo das redes */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.6) 40%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.heroe-fundo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/heroe/montanha.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: grayscale(1);
+  clip-path: inset(50% 0 50% 0);
+  transition: clip-path 1.6s ease-in-out;
+}
+
+.heroe-fundo.aberto {
+  clip-path: inset(0 0 0 0);
+}
+
+.heroe-fotografo {
+  position: absolute;
+  z-index: 2;
+  right: 70px;
+  bottom: 0;
+  height: 90%;
+  width: auto;
+  max-width: 110%;
+  object-fit: contain;
+  object-position: right bottom;
+  filter: grayscale(1);
+  will-change: transform;
+  visibility: hidden;
+}
+
+.heroe-fotografo.aberto {
+  visibility: visible;
+  animation: foto-sobe 1.4s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+
+@keyframes foto-sobe {
+  from {
+    translate: 0 100vh;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+.heroe h1 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(4rem, min(16vw, 26svh), 12rem);
+  font-weight: 400;
+  animation: subir 2.5s ease-out forwards;
+}
+
+@keyframes subir {
+  from {
+    transform: translateY(100vh);
+    filter: blur(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+.heroe-redes {
+  position: absolute;
+  z-index: 3;
+  right: 36px;
+  bottom: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.heroe-rede {
+  display: flex;
+  color: #fff;
+  animation: entrar-direita 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  transition: transform 0.2s;
+}
+
+.heroe-rede svg {
+  width: 26px;
+  height: 26px;
+}
+
+.heroe-rede:hover {
+  transform: rotate(-14deg) scale(1.2);
+}
+
+@keyframes entrar-direita {
+  from {
+    transform: translateX(100vw) rotate(360deg);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) rotate(0);
+    opacity: 1;
+  }
+}
+
+/* ---------- responsividade ---------- */
+
+/* tablet e telas menores */
+@media (max-width: 1024px) {
+  .heroe-fotografo {
+    right: 3vw;
+    height: 80%;
+    max-width: 100%;
+  }
+
+  .heroe-redes {
+    right: 24px;
+    bottom: 24px;
+  }
+}
+
+/* celular: KAWWA sobe um pouco e o fotógrafo ocupa a parte de baixo */
+@media (max-width: 640px) {
+  .heroe {
+    padding-bottom: 35svh;
+  }
+
+  .heroe::after {
+    height: 30%;
+  }
+
+  .heroe-fotografo {
+    right: 0;
+    height: 62%;
+    max-width: 100%;
+  }
+
+  .heroe-redes {
+    right: 16px;
+    bottom: 16px;
+    gap: 14px;
+  }
+
+  .heroe-rede svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* celular deitado / telas baixas */
+@media (max-height: 500px) and (orientation: landscape) {
+  .heroe-fotografo {
+    height: 85%;
+  }
+
+  .heroe-redes {
+    flex-direction: row;
+    gap: 16px;
+    right: 16px;
+    bottom: 12px;
+  }
+}

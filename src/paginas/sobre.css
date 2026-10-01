@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@900&family=Space+Mono:wght@400;700&display=swap');
+
+.sobre-scroll-track {
+  position: relative;
+  width: 100%;
+  min-height: 350vh;
+  background: #000;
+}
+
+.sobre-pin-wrap {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #000;
+  perspective: 1200px;
+}
+
+.sobre-conteudo-principal {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  filter: blur(0px);
+  will-change: transform, opacity, filter;
+  transform: translateZ(0); 
+}
+
+.sobre-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.65);
+}
+
+.sobre-titulo {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(2rem, 10.5vw, 10rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #e8401c;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.sobre-titulo span {
+  display: block;
+}
+
+.sobre-titulo span:nth-child(2) {
+  margin-left: 0.5em;
+}
+.sobre-titulo span:nth-child(4) {
+  margin-left: 1.3em;
+}
+
+.sobre-fade-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.sobre-papeis-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  perspective: 1500px;
+}
+
+.papel-card {
+  position: absolute;
+  left: 50%;
+  width: clamp(260px, 23vw, 360px);
+  aspect-ratio: 1 / 1.18;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.papel-folha {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #fbf8f2;
+  color: #111;
+  border-radius: 2px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform-style: preserve-3d;
+  box-shadow: 
+    -20px 25px 45px -10px rgba(0, 0, 0, 0.7),
+    -4px 8px 18px -4px rgba(0, 0, 0, 0.45),
+    inset 0 0 35px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.papel-vinco-vento {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 42%;
+  width: 22%;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.07) 40%,
+    rgba(255, 255, 255, 0.5) 55%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.papel-grampo {
+  position: absolute;
+  top: -5px;
+  left: 24px;
+  width: 22px;
+  height: 10px;
+  border: 2px solid #666;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to right, #666, #bbb, #666);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.papel-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: #888;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+  padding-bottom: 10px;
+}
+
+.papel-tag {
+  color: #e8401c;
+  font-weight: 700;
+}
+
+.papel-corpo h3 {
+  margin: 12px 0 8px 0;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #111;
+  text-transform: uppercase;
+}
+
+.papel-corpo p {
+  margin: 0;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #444;
+}
+
+.papel-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  color: #777;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding-top: 10px;
+}
+
+.papel-carimbo {
+  padding: 2px 6px;
+  border: 1px solid #e8401c;
+  color: #e8401c;
+  font-weight: 700;
+  border-radius: 2px;
+  transform: rotate(-3deg);
+}
+
+@media (max-width: 768px) {
+  .papel-card {
+    width: 78vw;
+  }
+}
+
+
+.sobre-slider-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: auto;
+}
