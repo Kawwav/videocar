@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { SiInstagram, SiTiktok, SiYoutube, SiBehance } from 'react-icons/si'
+import fotografoImg from '/heroe/fotografo.png'
 import './heroe.css'
 
 const fontes = [
@@ -113,7 +114,7 @@ function Heroe() {
       <img
         ref={fotoRef}
         className={`heroe-fotografo ${chegou ? 'aberto' : ''}`}
-        src="/heroe/fotografo.png"
+        src={fotografoImg}
         alt="Fotógrafo"
       />
       {chegou && (

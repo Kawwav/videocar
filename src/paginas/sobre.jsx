@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { Spiral3DSlider } from '../components/ui/spiral-3d-slider'
+import redbullVideo from '/sobre/redbull.mp4'
 import './sobre.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -91,7 +92,7 @@ function Sobre() {
         <div className="sobre-conteudo-principal" ref={conteudoRef}>
           <video
             className="sobre-video"
-            src="/sobre/redbull.mp4"
+            src={redbullVideo}
             autoPlay
             muted
             loop
