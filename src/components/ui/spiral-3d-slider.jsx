@@ -2,6 +2,7 @@
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber'
 import { WebGLErrorBoundary, WebGLFallback } from './webgl-error-boundary'
 import {
+  CanvasTexture,
   DoubleSide,
   LinearFilter,
   SRGBColorSpace,
@@ -26,6 +27,8 @@ const fragmentShader = `
   uniform float uImageAspect;
   uniform float uPlaneAspect;
   uniform float uBlur;
+  uniform sampler2D uIcon;
+  uniform float uHover;
   varying vec2 vUv;
   vec2 coverUv(vec2 uv) {
     vec2 scale = vec2(1.0);
@@ -54,7 +57,13 @@ const fragmentShader = `
     color.rgb = mix(vec3(luminance), color.rgb, 1.18);
     color.rgb = (color.rgb - 0.5) * 1.08 + 0.5;
     float brightness = 1.04 - min(uBlur * 0.025, 0.07);
-    gl_FragColor = vec4(clamp(color.rgb * brightness, 0.0, 1.0), 1.0);
+    vec3 rgb = clamp(color.rgb * brightness, 0.0, 1.0);
+    rgb *= 1.0 - 0.6 * uHover;
+    vec2 iconUv = (vUv - 0.5) * vec2(uPlaneAspect, 1.0) / 0.34 + 0.5;
+    float inside = step(0.0, iconUv.x) * step(iconUv.x, 1.0) * step(0.0, iconUv.y) * step(iconUv.y, 1.0);
+    float iconAlpha = texture2D(uIcon, iconUv).a * inside * uHover;
+    rgb = mix(rgb, vec3(1.0), iconAlpha);
+    gl_FragColor = vec4(rgb, 1.0);
   }
 `
 
@@ -84,6 +93,7 @@ function SpiralScene({
   bend,
   reducedMotion,
   lastInteraction,
+  hovered,
 }) {
   const sceneItems = useMemo(
     () =>
@@ -104,6 +114,32 @@ function SpiralScene({
   const meshes = useRef([])
   const materials = useRef([])
 
+  const iconTexture = useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 256
+    canvas.height = 256
+    const g = canvas.getContext('2d')
+    g.strokeStyle = '#fff'
+    g.fillStyle = '#fff'
+    g.lineWidth = 14
+    g.lineCap = 'round'
+    g.lineJoin = 'round'
+    g.beginPath()
+    g.moveTo(20, 128)
+    g.quadraticCurveTo(128, 28, 236, 128)
+    g.quadraticCurveTo(128, 228, 20, 128)
+    g.closePath()
+    g.stroke()
+    g.beginPath()
+    g.arc(128, 128, 28, 0, Math.PI * 2)
+    g.fill()
+    const texture = new CanvasTexture(canvas)
+    texture.minFilter = LinearFilter
+    texture.magFilter = LinearFilter
+    texture.generateMipmaps = false
+    return texture
+  }, [])
+
   const uniforms = useMemo(
     () =>
       textures.map((texture) => ({
@@ -112,8 +148,10 @@ function SpiralScene({
         uPlaneAspect: { value: cardAspectRatio },
         uBlur: { value: 0 },
         uBend: { value: 0 },
+        uIcon: { value: iconTexture },
+        uHover: { value: 0 },
       })),
-    [cardAspectRatio, textures],
+    [cardAspectRatio, textures, iconTexture],
   )
 
   useEffect(() => {
@@ -129,6 +167,7 @@ function SpiralScene({
   useFrame((_state, delta) => {
     if (
       autoRotate &&
+      hovered.current < 0 &&
       !reducedMotion.current &&
       performance.now() - lastInteraction.current > 450
     ) {
@@ -140,6 +179,8 @@ function SpiralScene({
       ? 1
       : 1 - Math.pow(1 - smoothing, frameScale)
     progress.current += (targetProgress.current - progress.current) * ease
+
+    const hoverEase = 1 - Math.pow(1 - 0.18, frameScale)
 
     const factor = Math.max(viewport.factor, 1)
     const planeWidth = Math.min(cardWidth / factor, viewport.width * 0.32)
@@ -169,6 +210,10 @@ function SpiralScene({
       material.uniforms.uBlur.value = Math.pow(distance, 1.28) * blurStrength
       material.uniforms.uBend.value = planeWidth * bend
       material.uniforms.uPlaneAspect.value = cardAspectRatio
+
+      const hoverTarget = hovered.current === index ? 1 : 0
+      material.uniforms.uHover.value +=
+        (hoverTarget - material.uniforms.uHover.value) * hoverEase
     })
   })
 
@@ -181,6 +226,18 @@ function SpiralScene({
             meshes.current[index] = node
           }}
           frustumCulled={false}
+          onPointerOver={(event) => {
+            event.stopPropagation()
+            hovered.current = index
+            gl.domElement.style.cursor = 'pointer'
+          }}
+          onPointerOut={() => {
+            if (hovered.current === index) {
+              hovered.current = -1
+              lastInteraction.current = performance.now()
+            }
+            gl.domElement.style.cursor = ''
+          }}
         >
           <planeGeometry args={[1, 1, 48, 2]} />
           <shaderMaterial
@@ -223,6 +280,7 @@ export function Spiral3DSlider({
   const lastInteraction = useRef(0)
   const visible = useRef(false)
   const reducedMotion = useRef(false)
+  const hovered = useRef(-1)
 
   useEffect(() => {
     const stage = stageRef.current
@@ -250,7 +308,11 @@ export function Spiral3DSlider({
       const delta = scrollY - previousScroll.current
       previousScroll.current = scrollY
 
-      if (visible.current && performance.now() - lastWheelTime.current > 80) {
+      if (
+        visible.current &&
+        hovered.current < 0 &&
+        performance.now() - lastWheelTime.current > 80
+      ) {
         lastInteraction.current = performance.now()
         const boundedDelta = Math.sign(delta) * Math.min(Math.abs(delta), 160)
         targetProgress.current += boundedDelta * scrollSensitivity
@@ -269,6 +331,7 @@ export function Spiral3DSlider({
   const handleWheel = (event) => {
     lastWheelTime.current = performance.now()
     lastInteraction.current = lastWheelTime.current
+    if (hovered.current >= 0) return
     const delta = Math.sign(event.deltaY) * Math.min(Math.abs(event.deltaY), 160)
     targetProgress.current += delta * scrollSensitivity
   }
@@ -341,6 +404,7 @@ export function Spiral3DSlider({
                 bend={bend}
                 reducedMotion={reducedMotion}
                 lastInteraction={lastInteraction}
+                hovered={hovered}
               />
             </Suspense>
           </Canvas>

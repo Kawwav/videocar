@@ -3,11 +3,11 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { Spiral3DSlider } from '../components/ui/spiral-3d-slider'
+import Faco from './faco.jsx'
 import redbullVideo from '/sobre/redbull.mp4'
 import './sobre.css'
 
 gsap.registerPlugin(ScrollTrigger)
-
 
 const SLIDES = [
   {
@@ -28,13 +28,13 @@ const SLIDES = [
   },
 ]
 
-
 function Sobre() {
   const containerRef = useRef(null)
   const pinRef = useRef(null)
   const conteudoRef = useRef(null)
   const fadeOverlayRef = useRef(null)
   const sliderRef = useRef(null)
+  const facoRef = useRef(null)
 
   useGSAP(
     () => {
@@ -44,7 +44,7 @@ function Sobre() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=300%',
+          end: '+=450%', // Aumentamos para dar tempo de ver a espiral antes da cortina entrar
           pin: pinRef.current,
           scrub: 1,
           anticipatePin: 1,
@@ -75,12 +75,22 @@ function Sobre() {
         'sinking',
       )
 
-      // 3. A espiral 3D assume o palco
+      // 3. A espiral 3D entra e se fixa
       tl.fromTo(
         sliderRef.current,
         { opacity: 0, scale: 0.92 },
         { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' },
         'sinking+=0.7',
+      )
+
+      // Pequena pausa com a espiral totalmente visível
+      tl.to({}, { duration: 0.6 })
+
+      // 4. Efeito cortina: o faco.jsx entra da direita (100%) para a esquerda (0%)
+      tl.fromTo(
+        facoRef.current,
+        { xPercent: 100 },
+        { xPercent: 0, duration: 1.8, ease: 'power2.inOut' },
       )
     },
     { scope: containerRef },
@@ -116,6 +126,25 @@ function Sobre() {
             ariaLabel="Galeria espiral de fotos"
             className="bg-transparent dark:bg-transparent"
           />
+
+          <a className="sobre-ver-portfolio" href="#portfolio">
+            <span>VER PORTFÓLIO</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M5 12h14M13 6l6 6-6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+
+        {/* Cortina do Faco que cobre a tela */}
+        <div className="sobre-faco-cortina" ref={facoRef}>
+          <Faco />
         </div>
       </div>
     </div>
