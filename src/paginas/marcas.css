@@ -1,0 +1,49 @@
+.marcas-secao {
+  box-sizing: border-box;
+  width: 100%;
+  padding: clamp(72px, 14vh, 160px) 5vw clamp(72px, 14vh, 160px);
+  background-color: #ffffff;
+  color: #111;
+}
+
+.marcas-titulo {
+  margin: 0 0 clamp(24px, 6vh, 72px);
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.8rem, 1.1vw, 1rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #555;
+}
+
+.marcas-grade {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: clamp(0px, 2vw, 24px);
+}
+
+.marcas-celula {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marcas-logo {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  filter: grayscale(1);
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .marcas-grade {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

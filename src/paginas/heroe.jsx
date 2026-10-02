@@ -18,10 +18,8 @@ const sequencia = Array.from({ length: VOLTAS }, () => fontes).flat()
 
 const INTERVALO = 180
 
-// força do paralaxe em px (maior = efeito mais forte)
 const FORCA = 450
 
-// suavidade do paralaxe: 0.01 = bem lento e macio, 1 = sem suavização
 const SUAVIDADE = 0.04
 
 const redes = [
@@ -54,20 +52,20 @@ function Heroe() {
 
   useEffect(() => {
     let frame = 0
-    let alvo = 0 // onde o fotógrafo deveria estar
-    let atual = 0 // onde ele está de fato (vai atrás do alvo, com atraso)
+    let alvo = 0 
+    let atual = 0 
     let ultimo = 0
 
     const calcularAlvo = () => {
       if (!heroRef.current) return
       const topo = heroRef.current.getBoundingClientRect().top
       const progresso = Math.min(Math.max(-topo / window.innerHeight, 0), 1)
-      // em telas baixas a força diminui, para não passar da altura da tela
+
       alvo = progresso * Math.min(FORCA, window.innerHeight * 0.45)
     }
 
     const animar = (agora) => {
-      // suavização independente da taxa de quadros (60Hz, 144Hz...)
+
       const dt = ultimo ? Math.min(agora - ultimo, 50) : 16.67
       ultimo = agora
       const fator = 1 - Math.pow(1 - SUAVIDADE, dt / 16.67)

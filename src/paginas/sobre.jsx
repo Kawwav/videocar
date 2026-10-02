@@ -44,7 +44,7 @@ function Sobre() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=450%', // Aumentamos para dar tempo de ver a espiral antes da cortina entrar
+          end: '+=450%',
           pin: pinRef.current,
           scrub: 1,
           anticipatePin: 1,
@@ -52,10 +52,8 @@ function Sobre() {
         },
       })
 
-      // 1. Momento estável com o vídeo e título nítidos
       tl.to({}, { duration: 0.35 })
 
-      // 2. Fundo recuando em blur até o preto
       tl.to(
         conteudoRef.current,
         {
@@ -75,7 +73,6 @@ function Sobre() {
         'sinking',
       )
 
-      // 3. A espiral 3D entra e se fixa
       tl.fromTo(
         sliderRef.current,
         { opacity: 0, scale: 0.92 },
@@ -83,15 +80,128 @@ function Sobre() {
         'sinking+=0.7',
       )
 
-      // Pequena pausa com a espiral totalmente visível
       tl.to({}, { duration: 0.6 })
 
-      // 4. Efeito cortina: o faco.jsx entra da direita (100%) para a esquerda (0%)
       tl.fromTo(
         facoRef.current,
         { xPercent: 100 },
         { xPercent: 0, duration: 1.8, ease: 'power2.inOut' },
       )
+
+      const q = gsap.utils.selector(containerRef)
+      const itens = q('.faco-item')
+
+      if (itens.length) {
+        const ESCALA = 0.16
+        const MARGEM = 28
+        const midia = gsap.timeline({ paused: true })
+
+        const entradaMidia = (el, lado, atraso) => {
+          const esq = lado === 'esq'
+          const medir = () => {
+            const caixa = el.offsetParent
+            return {
+              baixo: caixa.clientHeight - (el.offsetTop + el.offsetHeight),
+              lado: esq
+                ? el.offsetLeft
+                : caixa.clientWidth - (el.offsetLeft + el.offsetWidth),
+            }
+          }
+
+          midia.fromTo(
+            el,
+            {
+              autoAlpha: 0,
+              scale: ESCALA,
+              transformOrigin: esq ? '0% 100%' : '100% 100%',
+              x: () => (esq ? -1 : 1) * Math.max(medir().lado - MARGEM, 0),
+              y: () => medir().baixo + el.offsetHeight * ESCALA + 40,
+            },
+            {
+              autoAlpha: 1,
+              y: () => medir().baixo - MARGEM,
+              duration: 1.6,
+              ease: 'power2.inOut',
+            },
+            atraso,
+          )
+
+          midia.to(
+            el,
+            {
+              scale: 1,
+              x: 0,
+              y: 0,
+              duration: 0.6,
+              ease: 'power3.inOut',
+              onComplete: () => el.dispatchEvent(new CustomEvent('faco:chegou')),
+            },
+            atraso + 1.7,
+          )
+        }
+
+        itens.forEach((el, i) => {
+          entradaMidia(el, i < 2 ? 'esq' : 'dir', 0.3 + i * 0.2)
+        })
+
+        tl.call(
+          () => {
+            const indo = (tl.scrollTrigger?.direction ?? 1) > 0
+            if (indo) {
+              if (midia.progress() === 0) midia.invalidate()
+              midia.play()
+            } else {
+              midia.reverse()
+              itens.forEach((el) => el.dispatchEvent(new CustomEvent('faco:saiu')))
+            }
+          },
+          null,
+          '<+=1.1',
+        )
+      }
+
+      const camadas = q('.faco-camada')
+      const midias = q('.faco-midia')
+      const VELOCIDADES = [-0.15, 0.06, -0.25, 0.1]
+      const inicioParalaxe = () => tl.scrollTrigger.end
+      const fimParalaxe = () => tl.scrollTrigger.end + window.innerHeight
+
+      camadas.forEach((el, i) => {
+        gsap.fromTo(
+          el,
+          { y: 0 },
+          {
+            y: () => VELOCIDADES[i % VELOCIDADES.length] * window.innerHeight,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: inicioParalaxe,
+              end: fimParalaxe,
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          },
+        )
+      })
+
+      midias.forEach((el) => {
+        gsap.fromTo(
+          el,
+          { yPercent: -8, scale: 1.18 },
+          {
+            yPercent: 8,
+            scale: 1.18,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: () => tl.scrollTrigger.start,
+              end: fimParalaxe,
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          },
+        )
+      })
     },
     { scope: containerRef },
   )
@@ -142,7 +252,6 @@ function Sobre() {
           </a>
         </div>
 
-        {/* Cortina do Faco que cobre a tela */}
         <div className="sobre-faco-cortina" ref={facoRef}>
           <Faco />
         </div>
