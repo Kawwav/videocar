@@ -261,3 +261,6 @@ function Sobre() {
 }
 
 export default Sobre
+
+//clicamos no video ou imagem todo vao para baixo e o que climmaos 
+// surge de baixo para cma ocupando emtade da tela e na dierita tem um tiutlo e descrição do video 

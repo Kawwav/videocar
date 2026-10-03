@@ -56,8 +56,19 @@ function useEmbaralhar(final) {
   return [texto, iniciar]
 }
 
-function Midia({ numero, tipo, src, alt, legenda }) {
+function Midia({
+  numero,
+  tipo,
+  src,
+  alt,
+  legenda,
+  selecionado,
+  escondido,
+  vars,
+  onSelecionar,
+}) {
   const videoRef = useRef(null)
+  const quadradoRef = useRef(null)
   const [tocando, setTocando] = useState(false)
   const [ativa, setAtiva] = useState(false)
   const [textoLegenda, embaralhar] = useEmbaralhar(legenda)
@@ -90,8 +101,18 @@ function Midia({ numero, tipo, src, alt, legenda }) {
       figura?.removeEventListener('faco:chegou', aoChegar)
       figura?.removeEventListener('faco:saiu', aoSair)
     }
-
   }, [])
+
+  useEffect(() => {
+    if (selecionado) {
+      const t = setTimeout(() => {
+        setAtiva(true)
+        embaralhar()
+      }, 1400)
+      return () => clearTimeout(t)
+    }
+    if (!automatico.current) setAtiva(false)
+  }, [selecionado])
 
   const alternar = () => {
     const video = videoRef.current
@@ -107,10 +128,42 @@ function Midia({ numero, tipo, src, alt, legenda }) {
     })
   }
 
+  const abrir = () => {
+    const q = quadradoRef.current
+    if (!q) return
+    const r = q.getBoundingClientRect()
+    const alvo = Math.min(window.innerHeight * 0.6, window.innerWidth * 0.82)
+    const escala = alvo / r.width
+    const dx = window.innerWidth / 2 - (r.left + r.width / 2)
+    const dy = window.innerHeight / 2 - (r.top + r.height / 2) - 16
+
+    onSelecionar(numero, {
+      '--tx': `${dx}px`,
+      '--ty': `${dy}px`,
+      '--s': escala,
+      '--ox': `${q.offsetLeft + q.offsetWidth / 2}px`,
+      '--oy': `${q.offsetTop + q.offsetHeight / 2}px`,
+    })
+  }
+
+  const aoClicar = () => {
+    if (!selecionado) {
+      abrir()
+      if (tipo === 'video') videoRef.current?.play().catch(() => {})
+      return
+    }
+    if (tipo === 'video') alternar()
+  }
+
   return (
     <figure
       ref={figuraRef}
-      className={`faco-item faco-item--${numero}`}
+      className={
+        `faco-item faco-item--${numero}` +
+        (selecionado ? ' faco-item--foco' : '') +
+        (escondido ? ' faco-item--fora' : '')
+      }
+      style={selecionado ? vars : undefined}
     >
       <div className="faco-camada">
         <div className="faco-numero">
@@ -118,14 +171,29 @@ function Midia({ numero, tipo, src, alt, legenda }) {
         </div>
 
         <div
+          ref={quadradoRef}
           className="faco-quadrado"
+          onClick={aoClicar}
+          {...(tipo === 'imagem'
+            ? {
+                role: 'button',
+                tabIndex: 0,
+                'aria-label': `Ampliar ${alt}`,
+                onKeyDown: (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    aoClicar()
+                  }
+                },
+              }
+            : {})}
           onMouseEnter={() => {
-            if (automatico.current) return
+            if (automatico.current || selecionado) return
             setAtiva(true)
             embaralhar()
           }}
           onMouseLeave={() => {
-            if (automatico.current) return
+            if (automatico.current || selecionado) return
             setAtiva(false)
           }}
         >
@@ -144,7 +212,6 @@ function Midia({ numero, tipo, src, alt, legenda }) {
               <button
                 type="button"
                 className={`faco-play ${tocando ? 'tocando' : ''}`}
-                onClick={alternar}
                 aria-label={tocando ? `Pausar ${alt}` : `Reproduzir ${alt}`}
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -170,15 +237,55 @@ function Midia({ numero, tipo, src, alt, legenda }) {
 }
 
 function Faco() {
+  const [foco, setFoco] = useState(null)
+
+  const fechar = () => {
+    document.querySelectorAll('.faco-item video').forEach((v) => v.pause())
+    setFoco(null)
+  }
+
+  useEffect(() => {
+    if (!foco) return
+    const aoTecla = (e) => {
+      if (e.key === 'Escape') fechar()
+    }
+    window.addEventListener('keydown', aoTecla)
+    window.addEventListener('resize', fechar)
+    window.addEventListener('wheel', fechar, { passive: true })
+    window.addEventListener('touchmove', fechar, { passive: true })
+    return () => {
+      window.removeEventListener('keydown', aoTecla)
+      window.removeEventListener('resize', fechar)
+      window.removeEventListener('wheel', fechar)
+      window.removeEventListener('touchmove', fechar)
+    }
+  }, [foco])
+
   return (
-    <section className="faco-secao fundo-granulado">
+    <section
+      className={`faco-secao fundo-granulado ${foco ? 'faco-secao--foco' : ''}`}
+    >
       <div className="faco-conteudo">
         <h2 className="faco-titulo">O QUE FAZEMOS</h2>
       </div>
 
-      {ITENS.map((item, i) => (
-        <Midia key={item.src} numero={i + 1} {...item} />
-      ))}
+      <div className="faco-fundo" onClick={fechar} aria-hidden="true" />
+
+      {ITENS.map((item, i) => {
+        const numero = i + 1
+        const selecionado = foco?.numero === numero
+        return (
+          <Midia
+            key={item.src}
+            numero={numero}
+            {...item}
+            selecionado={selecionado}
+            escondido={!!foco && !selecionado}
+            vars={selecionado ? foco.vars : undefined}
+            onSelecionar={(n, vars) => setFoco({ numero: n, vars })}
+          />
+        )
+      })}
     </section>
   )
 }
