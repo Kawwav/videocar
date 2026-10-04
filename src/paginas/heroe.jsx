@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { SiInstagram, SiTiktok, SiYoutube, SiBehance } from 'react-icons/si'
 import fotografoImg from '/heroe/fotografo.png'
+import montanhaImg from '/heroe/montanha.png'
 import './heroe.css'
 
 const fontes = [
@@ -108,7 +109,9 @@ function Heroe() {
 
   return (
     <section className="heroe" ref={heroRef}>
-      <div className={`heroe-fundo ${chegou ? 'aberto' : ''}`} />
+      <div className={`heroe-fundo ${chegou ? 'aberto' : ''}`} aria-hidden="true">
+        <img src={montanhaImg} alt="" decoding="async" fetchPriority="high" draggable="false" />
+      </div>
       <img
         ref={fotoRef}
         className={`heroe-fotografo ${chegou ? 'aberto' : ''}`}

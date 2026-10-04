@@ -527,6 +527,7 @@ function Faco() {
   }
   useEffect(() => {
     if (!foco) return
+    window.__lenis?.stop()
     const secao = secaoRef.current
     const figs = [...secao.querySelectorAll('.faco-item')]
     const lento = reduzido() ? 0.01 : 1
@@ -654,6 +655,7 @@ function Faco() {
     window.addEventListener('keydown', aoTeclaScroll)
 
     return () => {
+      window.__lenis?.start()
       gsap.ticker.remove(aplicar)
       gsap.killTweensOf(P)
       gsap.killTweensOf(off)
