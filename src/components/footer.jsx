@@ -132,10 +132,10 @@ function Footer() {
       <footer className="footer fundo-granulado" ref={secaoRef}>
         <div className="footer-palco">
           <span className="footer-ano footer-ano--esq" ref={esqRef} aria-hidden="true">
-            <span>2004 –</span>
+            <span>2004 <span className="footer-traco">–</span></span>
           </span>
           <span className="footer-ano footer-ano--dir" ref={dirRef} aria-hidden="true">
-            <span>– 2026</span>
+            <span><span className="footer-traco">–</span> 2026</span>
           </span>
 
           <div className="footer-quadrado">

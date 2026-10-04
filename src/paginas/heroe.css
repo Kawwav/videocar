@@ -195,10 +195,14 @@ body {
     height: 30%;
   }
 
+  .heroe h1 {
+    font-size: clamp(5rem, min(27vw, 24svh), 10rem);
+  }
+
   .heroe-fotografo {
-    right: 0;
-    height: 62%;
-    max-width: 100%;
+    right: -36vw;
+    height: 66%;
+    max-width: none;
   }
 
   .heroe-redes {

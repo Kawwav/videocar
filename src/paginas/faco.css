@@ -497,16 +497,7 @@
 
 @media (max-width: 640px) {
   .faco-indice {
-    left: 0;
-    top: 100%;
-    margin: calc(20px / var(--zoom, 1)) 0 0;
-    flex-direction: row;
-    gap: 18px;
-  }
-
-  .faco-mini {
-    width: 72px;
-    height: 46px;
+    display: none;
   }
 }
 
