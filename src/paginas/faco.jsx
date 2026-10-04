@@ -268,6 +268,7 @@ function Midia({
   const [textoLegenda, embaralhar] = useEmbaralhar(legenda)
   const figuraRef = useRef(null)
   const automatico = useRef(false)
+  const jaFoiFoco = useRef(false)
 
   useEffect(() => {
     const consulta = window.matchMedia('(hover: none), (max-width: 640px)')
@@ -283,10 +284,7 @@ function Midia({
       setAtiva(true)
       embaralhar()
     }
-    const aoSair = () => {
-      if (!automatico.current) return
-      setAtiva(false)
-    }
+    const aoSair = () => {}
     const total = (extras?.length ?? 2) + 1
     const aoNavegar = (e) =>
       setIndice((i) => Math.min(Math.max(i + e.detail, 0), total - 1))
@@ -294,7 +292,25 @@ function Midia({
     figura?.addEventListener('faco:chegou', aoChegar)
     figura?.addEventListener('faco:saiu', aoSair)
 
+    // legenda sempre visível: embaralha uma vez quando a figura entra na tela
+    let observador = null
+    if (figura && 'IntersectionObserver' in window) {
+      observador = new IntersectionObserver(
+        ([entrada]) => {
+          if (!entrada.isIntersecting) return
+          setAtiva(true)
+          embaralhar()
+          observador.disconnect()
+        },
+        { threshold: 0.4 },
+      )
+      observador.observe(figura)
+    } else {
+      setAtiva(true)
+    }
+
     return () => {
+      observador?.disconnect()
       consulta.removeEventListener('change', sincronizar)
       figura?.removeEventListener('faco:navegar', aoNavegar)
       figura?.removeEventListener('faco:chegou', aoChegar)
@@ -304,14 +320,23 @@ function Midia({
 
   useEffect(() => {
     if (selecionado) {
+      jaFoiFoco.current = true
       const t = setTimeout(() => {
         setAtiva(true)
         embaralhar()
       }, 1100)
       return () => clearTimeout(t)
     }
-    if (!automatico.current) setAtiva(false)
     setIndice(0)
+    if (jaFoiFoco.current) {
+      // ao fechar, a legenda reaparece (embaralhando) quando a figura volta ao lugar
+      jaFoiFoco.current = false
+      const t = setTimeout(() => {
+        setAtiva(true)
+        embaralhar()
+      }, 2300)
+      return () => clearTimeout(t)
+    }
   }, [selecionado])
 
   useEffect(() => {
@@ -395,12 +420,7 @@ function Midia({
             : {})}
           onMouseEnter={() => {
             if (automatico.current || selecionado) return
-            setAtiva(true)
             embaralhar()
-          }}
-          onMouseLeave={() => {
-            if (automatico.current || selecionado) return
-            setAtiva(false)
           }}
         >
           {tipo === 'video' ? (
