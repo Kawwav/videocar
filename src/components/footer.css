@@ -10,23 +10,16 @@
   font-display: swap;
 }
 
-/* "cortina": o footer fica fixo atras do conteudo.
-   O clip-path recorta o footer fixo na area desta caixa,
-   entao ele so aparece conforme a caixa entra na tela */
 .footer-revelar {
-  --u: clamp(0.5px, 0.08vw, 1px); /* igual ao .marcas-secao */
-  position: relative;
+  --u: clamp(0.5px, 0.08vw, 1px);   position: relative;
   height: 100svh;
-  margin-top: calc(-64 * var(--u)); /* fica por tras das bolhas do Marcas */
-  background-color: #e4340f;
+  margin-top: calc(-64 * var(--u));   background-color: #e4340f;
   clip-path: inset(0);
 }
 
 .footer {
-  --footer-vermelho: #e4340f; /* mesmo vermelho da foto */
-  box-sizing: border-box;
-  position: fixed; /* fica parado no fundo; o conteudo de cima sobe e descobre */
-  left: 0;
+  --footer-vermelho: #e4340f;   box-sizing: border-box;
+  position: fixed;   left: 0;
   bottom: 0;
   width: 100%;
   height: 100svh;
@@ -44,7 +37,6 @@
   width: min(78vw, 78svh, 720px);
 }
 
-/* moldura quadrada (fica na frente dos anos) */
 .footer-quadrado {
   position: relative;
   z-index: 1;
@@ -54,8 +46,6 @@
   background: var(--footer-vermelho);
 }
 
-/* a foto e retrato (2:3): fica 150% da altura do quadrado,
-   sobrando 25% em cima e embaixo para o parallax */
 .footer-foto {
   position: absolute;
   left: 0;
@@ -68,8 +58,6 @@
   will-change: transform;
 }
 
-
-/* anos escritos atras da foto */
 .footer-ano {
   position: absolute;
   z-index: 0;
@@ -86,7 +74,6 @@
   user-select: none;
 }
 
-/* "2004 -" a esquerda da foto */
 .footer-ano--esq {
   top: 0;
   bottom: 0;
@@ -94,7 +81,6 @@
   margin-right: clamp(16px, 3vw, 48px);
 }
 
-/* "- 2026" a direita da foto */
 .footer-ano--dir {
   top: 0;
   bottom: 0;
@@ -102,7 +88,6 @@
   margin-left: clamp(16px, 3vw, 48px);
 }
 
-/* assinatura manuscrita abaixo da foto */
 .footer-palco {
   --ano-mobile: clamp(2.2rem, min(16vw, 12svh), 7rem);
 }
@@ -124,7 +109,6 @@
   user-select: none;
 }
 
-/* telas estreitas: um em cima, outro embaixo */
 @media (max-width: 900px) {
   .footer-ano {
     left: 0;
@@ -148,5 +132,52 @@
 
   .footer-assinatura {
     margin-top: calc(var(--ano-mobile) * 0.85 + clamp(10px, 2.5vw, 24px) * 2);
+  }
+}
+
+.footer-icones {
+  position: absolute;
+  z-index: 3;
+  right: 36px;
+  bottom: 36px;
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+}
+
+.footer-icone {
+  display: flex;
+  color: #fff;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.footer-icone svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s;
+}
+
+.footer-icone:hover svg {
+  transform: rotate(-14deg) scale(1.2);
+}
+
+@media (max-width: 1024px) {
+  .footer-icones {
+    right: 24px;
+    bottom: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-icones {
+    right: 16px;
+    bottom: 16px;
+    gap: 12px;
+  }
+
+  .footer-icone svg {
+    width: 18px;
+    height: 18px;
   }
 }

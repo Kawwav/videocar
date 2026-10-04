@@ -4,10 +4,9 @@
   padding: clamp(72px, 14vh, 160px) 5vw clamp(72px, 14vh, 160px);
   background-color: #ffffff;
   color: #111;
-  /* fica na frente do footer; as bolhas penduram na borda de baixo */
   position: relative;
   z-index: 1;
-  --u: clamp(0.5px, 0.08vw, 1px); /* escala das bolhas (igual ao .footer-revelar) */
+  --u: clamp(0.5px, 0.08vw, 1px); 
 }
 
 .marcas-titulo {
@@ -52,8 +51,6 @@
   }
 }
 
-/* borda de baixo feita de bolhas brancas de tamanhos diferentes.
-   cada camada repete um circulo; juntas, se fundem num contorno de bolhas */
 .marcas-bolhas {
   position: absolute;
   top: calc(100% - 1px);

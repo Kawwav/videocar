@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import lamboVideo from '/faco/lambo.mp4'
+import lambo2Video from '/faco/lambo2.mp4'
+import lambo3Video from '/faco/lambo3.mp4'
 import corridaVideo from '/faco/corrida.mp4'
 import vlogVideo from '/faco/vlog.mp4'
 import mclarenImg from '/faco/mclaren.jpg'
@@ -10,7 +12,16 @@ import './granulado.css'
 import './faco.css'
 
 const ITENS = [
-  { tipo: 'video', src: lamboVideo, alt: 'Lamborghini', legenda: 'VÍDEOS EM RUAS' },
+  {
+    tipo: 'video',
+    src: lamboVideo,
+    alt: 'Lamborghini',
+    legenda: 'VÍDEOS EM RUAS',
+    extras: [
+      { tipo: 'video', src: lambo2Video },
+      { tipo: 'video', src: lambo3Video },
+    ],
+  },
   {
     tipo: 'imagem',
     src: mclarenImg,
@@ -21,8 +32,26 @@ const ITENS = [
       { tipo: 'imagem', src: mclaren3Img },
     ],
   },
-  { tipo: 'video', src: corridaVideo, alt: 'Corrida', legenda: 'FOTOS E VÍDEOS EM EVENTOS' },
-  { tipo: 'video', src: vlogVideo, alt: 'Vlog', legenda: 'VLOGS' },
+  {
+    tipo: 'video',
+    src: corridaVideo,
+    alt: 'Corrida',
+    legenda: 'FOTOS E VÍDEOS EM EVENTOS',
+    extras: [
+      { tipo: 'video', src: vlogVideo },
+      { tipo: 'video', src: lamboVideo },
+    ],
+  },
+  {
+    tipo: 'video',
+    src: vlogVideo,
+    alt: 'Vlog',
+    legenda: 'VLOGS',
+    extras: [
+      { tipo: 'video', src: lamboVideo },
+      { tipo: 'video', src: corridaVideo },
+    ],
+  },
 ]
 
 function formatar(s) {
@@ -278,7 +307,7 @@ function Midia({
       const t = setTimeout(() => {
         setAtiva(true)
         embaralhar()
-      }, 2600)
+      }, 1100)
       return () => clearTimeout(t)
     }
     if (!automatico.current) setAtiva(false)
@@ -536,7 +565,7 @@ function Faco() {
           y: base[i].y + window.innerHeight * 0.45,
           scale: 0.3,
           autoAlpha: 0,
-          duration: 2 * lento,
+          duration: 0.9 * lento,
           ease: 'power2.in',
         }),
       )
@@ -545,7 +574,7 @@ function Faco() {
     let aoMover = null
     gsap.to(P, {
       v: 1,
-      duration: 3.4 * lento,
+      duration: 1.5 * lento,
       ease: SUAVE,
       overwrite: true,
       onComplete: () => {

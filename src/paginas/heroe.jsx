@@ -23,10 +23,10 @@ const FORCA = 450
 const SUAVIDADE = 0.04
 
 const redes = [
-  { nome: 'Instagram', url: 'https://www.instagram.com/', Icone: SiInstagram },
-  { nome: 'TikTok', url: 'https://www.tiktok.com/', Icone: SiTiktok },
+  { nome: 'Instagram', url: 'https://www.instagram.com/_k.aww.a_/?theme=dark', Icone: SiInstagram },
+  { nome: 'TikTok', url: 'https://www.tiktok.com/@k_awwa_', Icone: SiTiktok },
   { nome: 'YouTube', url: 'https://www.youtube.com/', Icone: SiYoutube },
-  { nome: 'Behance', url: 'https://www.behance.net/', Icone: SiBehance },
+  { nome: 'Behance', url: 'https://www.behance.net/viniciuskawwa', Icone: SiBehance },
 ]
 
 function Heroe() {

@@ -37,7 +37,17 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.65);
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.sobre-conteudo-principal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.35);
 }
 
 .sobre-titulo {
@@ -51,11 +61,11 @@
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: #e8401c;
-  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
 }
 
 .sobre-titulo span {
   display: block;
+  will-change: transform, filter, opacity;
 }
 
 .sobre-titulo span:nth-child(2) {
@@ -267,5 +277,76 @@
     right: 16px;
     bottom: 16px;
     font-size: 0.75rem;
+  }
+}
+
+.sobre-slider-fundo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(55% 60% at 50% 50%, rgba(232, 64, 28, 0.34) 0%, rgba(232, 64, 28, 0) 70%),
+    radial-gradient(45% 55% at 12% 88%, rgba(122, 18, 64, 0.6) 0%, rgba(122, 18, 64, 0) 70%),
+    radial-gradient(40% 50% at 90% 10%, rgba(255, 150, 50, 0.26) 0%, rgba(255, 150, 50, 0) 70%),
+    linear-gradient(160deg, #0b0508 0%, #1c0b12 48%, #050505 100%);
+}
+
+.sobre-slider-fundo::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(35% 35% at 30% 40%, rgba(255, 90, 40, 0.28), transparent 70%),
+    radial-gradient(30% 30% at 72% 65%, rgba(160, 30, 90, 0.32), transparent 70%);
+  filter: blur(40px);
+  animation: sobre-fundo-flutua 18s ease-in-out infinite alternate;
+}
+
+.sobre-slider-fundo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.65) 100%);
+}
+
+.sobre-slider-grao {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+}
+
+@keyframes sobre-fundo-flutua {
+  from { transform: translate3d(-4%, -3%, 0) rotate(0deg) scale(1); }
+  to   { transform: translate3d(4%, 3%, 0) rotate(12deg) scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sobre-slider-fundo::before { animation: none; }
+}
+
+.sobre-conteudo-principal::before {
+  content: '';
+  position: absolute;
+  z-index: 1; 
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 40%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.6) 40%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+@media (max-width: 640px) {
+  .sobre-conteudo-principal::before {
+    height: 30%;
   }
 }

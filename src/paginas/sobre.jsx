@@ -5,6 +5,7 @@ import { useGSAP } from '@gsap/react'
 import { Spiral3DSlider } from '../components/ui/spiral-3d-slider'
 import Faco from './faco.jsx'
 import redbullVideo from '/sobre/redbull.mp4'
+import './granulado.css'
 import './sobre.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -35,10 +36,33 @@ function Sobre() {
   const fadeOverlayRef = useRef(null)
   const sliderRef = useRef(null)
   const facoRef = useRef(null)
+  const videoRef = useRef(null)
 
   useGSAP(
     () => {
       ScrollTrigger.refresh()
+      const linhas = containerRef.current.querySelectorAll('.sobre-titulo span')
+      const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      if (linhas.length && !semMovimento) {
+        gsap.fromTo(
+          linhas,
+          { y: '45vh', opacity: 0, filter: 'blur(24px)' },
+          {
+            y: 0,
+            opacity: 1,
+            filter: 'blur(0px)',
+            duration: 1.5,
+            ease: 'power3.out',
+            stagger: 0.14,
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top 75%',
+              toggleActions: 'play none none reverse',
+            },
+          },
+        )
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -49,6 +73,13 @@ function Sobre() {
           scrub: 1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: () => {
+            const video = videoRef.current
+            if (!video) return
+            const escondido = gsap.getProperty(conteudoRef.current, 'opacity') < 0.02
+            if (escondido && !video.paused) video.pause()
+            else if (!escondido && video.paused) video.play().catch(() => {})
+          },
         },
       })
 
@@ -110,7 +141,6 @@ function Sobre() {
             }
           }
 
-          // sobe de baixo, pequena, no canto
           tl.fromTo(
             el,
             {
@@ -128,8 +158,6 @@ function Sobre() {
             },
             `faco+=${1.1 + atraso}`,
           )
-
-          // vai para a posição final
           tl.to(
             el,
             {
@@ -150,7 +178,6 @@ function Sobre() {
         })
       }
 
-      // segura um pouco com tudo na tela antes de soltar o pin
       tl.to({}, { duration: 0.8 })
 
       const camadas = q('.faco-camada')
@@ -204,8 +231,11 @@ function Sobre() {
       <div className="sobre-pin-wrap" ref={pinRef}>
         <div className="sobre-conteudo-principal" ref={conteudoRef}>
           <video
+            ref={videoRef}
             className="sobre-video"
             src={redbullVideo}
+            disablePictureInPicture
+            disableRemotePlayback
             autoPlay
             muted
             loop
@@ -224,6 +254,10 @@ function Sobre() {
         <div className="sobre-fade-overlay" ref={fadeOverlayRef} />
 
         <div className="sobre-slider-wrap" ref={sliderRef}>
+          <div className="sobre-slider-fundo" aria-hidden="true">
+            <div className="sobre-slider-grao fundo-granulado" />
+          </div>
+
           <Spiral3DSlider
             items={SLIDES}
             ariaLabel="Galeria espiral de fotos"
@@ -255,5 +289,3 @@ function Sobre() {
 
 export default Sobre
 
-//clicamos no video ou imagem todo vao para baixo e o que climmaos 
-// surge de baixo para cma ocupando emtade da tela e na dierita tem um tiutlo e descrição do video
