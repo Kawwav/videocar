@@ -27,6 +27,66 @@ const SLIDES = [
     src: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80',
     alt: 'Drift no asfalto',
   },
+  {
+    src: 'https://images.unsplash.com/photo-1628519592419-bf288f08cef5?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Esportivo preto fosco na chuva',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1625231334168-35067f8853ed?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Esportivo cinza com faixas vermelhas',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1567808291548-fc3ee04dbcf0?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Carro preto estacionado',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Esportivo vermelho',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1532581140115-3e355d1ed1de?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Esportivo laranja na estrada',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1707399720697-b1d1502fac58?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Esportivo em frente a um prédio',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Mercedes-Benz cupê vermelho',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1507136566006-cfc505b114fc?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Cupê vermelho de dia',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1511994477422-b69e44bd4ea9?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Cupê esportivo prata',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1592853625601-bb9d23da12fc?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Porsche cinza',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1592853625511-ad0edcc69c07?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Esportivo cinza em movimento',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1609386464913-4cbfa39de540?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Muscle car entre árvores de outono',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80',
+    alt: 'BMW branco na rua',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1469285994282-454ceb49e63c?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Aston Martin branco conversível',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Ferrari 458 em panning',
+  },
 ]
 
 function Sobre() {
@@ -288,4 +348,3 @@ function Sobre() {
 }
 
 export default Sobre
-

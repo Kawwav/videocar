@@ -58,11 +58,12 @@ const fragmentShader = `
     color.rgb = (color.rgb - 0.5) * 1.08 + 0.5;
     float brightness = 1.04 - min(uBlur * 0.025, 0.07);
     vec3 rgb = clamp(color.rgb * brightness, 0.0, 1.0);
-    rgb *= 1.0 - 0.6 * uHover;
+    rgb *= 1.0 - 0.4 * uHover;
     vec2 iconUv = (vUv - 0.5) * vec2(uPlaneAspect, 1.0) / 0.34 + 0.5;
     float inside = step(0.0, iconUv.x) * step(iconUv.x, 1.0) * step(0.0, iconUv.y) * step(iconUv.y, 1.0);
     float iconAlpha = texture2D(uIcon, iconUv).a * inside * uHover;
     rgb = mix(rgb, vec3(1.0), iconAlpha);
+    rgb = pow(rgb, vec3(1.0 / 2.2));
     gl_FragColor = vec4(rgb, 1.0);
   }
 `
@@ -109,7 +110,8 @@ function SpiralScene({
     sceneItems.map((item) => item.src),
   )
 
-  const { gl, viewport } = useThree()
+  const { gl, viewport, size } = useThree()
+  const desktop = size.width >= 1024
   const progress = useRef(0)
   const meshes = useRef([])
   const materials = useRef([])
@@ -186,7 +188,10 @@ function SpiralScene({
     const planeWidth = Math.min(cardWidth / factor, viewport.width * 0.32)
     const planeHeight = planeWidth / cardAspectRatio
     const spiralRadius = Math.min(radius / factor, viewport.width * 0.3)
-    const gap = Math.min(verticalGap / factor, viewport.height * 0.1)
+    const gap = Math.min(
+      (verticalGap / factor) * (desktop ? 1.4 : 1),
+      viewport.height * (desktop ? 0.14 : 0.1),
+    )
     const count = sceneItems.length
 
     meshes.current.forEach((mesh, index) => {
@@ -194,7 +199,7 @@ function SpiralScene({
       if (!mesh || !material) return
 
       const position = wrappedPosition(index - progress.current, count)
-      const angle = position * 0.78
+      const angle = position * (desktop ? 0.88 : 0.78)
       const depth = (Math.cos(angle) + 1) / 2
       const distance = Math.min(Math.abs(position) / (count * 0.43), 1)
       const scale = 0.74 + depth * 0.26
