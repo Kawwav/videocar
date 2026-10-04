@@ -44,7 +44,7 @@ function Sobre() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=450%',
+          end: '+=800%',
           pin: pinRef.current,
           scrub: 1,
           anticipatePin: 1,
@@ -82,10 +82,13 @@ function Sobre() {
 
       tl.to({}, { duration: 0.6 })
 
+      tl.addLabel('faco')
+
       tl.fromTo(
         facoRef.current,
         { xPercent: 100 },
         { xPercent: 0, duration: 1.8, ease: 'power2.inOut' },
+        'faco',
       )
 
       const q = gsap.utils.selector(containerRef)
@@ -94,7 +97,6 @@ function Sobre() {
       if (itens.length) {
         const ESCALA = 0.16
         const MARGEM = 28
-        const midia = gsap.timeline({ paused: true })
 
         const entradaMidia = (el, lado, atraso) => {
           const esq = lado === 'esq'
@@ -108,7 +110,8 @@ function Sobre() {
             }
           }
 
-          midia.fromTo(
+          // sobe de baixo, pequena, no canto
+          tl.fromTo(
             el,
             {
               autoAlpha: 0,
@@ -123,10 +126,11 @@ function Sobre() {
               duration: 1.6,
               ease: 'power2.inOut',
             },
-            atraso,
+            `faco+=${1.1 + atraso}`,
           )
 
-          midia.to(
+          // vai para a posição final
+          tl.to(
             el,
             {
               scale: 1,
@@ -135,30 +139,19 @@ function Sobre() {
               duration: 0.6,
               ease: 'power3.inOut',
               onComplete: () => el.dispatchEvent(new CustomEvent('faco:chegou')),
+              onReverseComplete: () => el.dispatchEvent(new CustomEvent('faco:saiu')),
             },
-            atraso + 1.7,
+            `faco+=${1.1 + atraso + 1.7}`,
           )
         }
 
         itens.forEach((el, i) => {
           entradaMidia(el, i < 2 ? 'esq' : 'dir', 0.3 + i * 0.2)
         })
-
-        tl.call(
-          () => {
-            const indo = (tl.scrollTrigger?.direction ?? 1) > 0
-            if (indo) {
-              if (midia.progress() === 0) midia.invalidate()
-              midia.play()
-            } else {
-              midia.reverse()
-              itens.forEach((el) => el.dispatchEvent(new CustomEvent('faco:saiu')))
-            }
-          },
-          null,
-          '<+=1.1',
-        )
       }
+
+      // segura um pouco com tudo na tela antes de soltar o pin
+      tl.to({}, { duration: 0.8 })
 
       const camadas = q('.faco-camada')
       const midias = q('.faco-midia')
@@ -263,4 +256,4 @@ function Sobre() {
 export default Sobre
 
 //clicamos no video ou imagem todo vao para baixo e o que climmaos 
-// surge de baixo para cma ocupando emtade da tela e na dierita tem um tiutlo e descrição do video 
+// surge de baixo para cma ocupando emtade da tela e na dierita tem um tiutlo e descrição do video
