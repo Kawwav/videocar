@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap');
+
+@font-face {
+  font-family: 'Universal Exploration';
+  src: local('Universal Exploration'),
+       url('/footer/UniversalExploration.otf') format('opentype'),
+       url('/footer/UniversalExploration.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* "cortina": o footer fica fixo atras do conteudo.
+   O clip-path recorta o footer fixo na area desta caixa,
+   entao ele so aparece conforme a caixa entra na tela */
+.footer-revelar {
+  --u: clamp(0.5px, 0.08vw, 1px); /* igual ao .marcas-secao */
+  position: relative;
+  height: 100svh;
+  margin-top: calc(-64 * var(--u)); /* fica por tras das bolhas do Marcas */
+  background-color: #e4340f;
+  clip-path: inset(0);
+}
+
+.footer {
+  --footer-vermelho: #e4340f; /* mesmo vermelho da foto */
+  box-sizing: border-box;
+  position: fixed; /* fica parado no fundo; o conteudo de cima sobe e descobre */
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(48px, 10vh, 120px) 5vw;
+  background-color: var(--footer-vermelho);
+  color: #fff;
+  overflow: hidden;
+}
+
+.footer-palco {
+  position: relative;
+  width: min(78vw, 78svh, 720px);
+}
+
+/* moldura quadrada (fica na frente dos anos) */
+.footer-quadrado {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--footer-vermelho);
+}
+
+/* a foto e retrato (2:3): fica 150% da altura do quadrado,
+   sobrando 25% em cima e embaixo para o parallax */
+.footer-foto {
+  position: absolute;
+  left: 0;
+  top: -25%;
+  display: block;
+  width: 100%;
+  height: 150%;
+  object-fit: cover;
+  user-select: none;
+  will-change: transform;
+}
+
+
+/* anos escritos atras da foto */
+.footer-ano {
+  position: absolute;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(2.5rem, 6.8vw, 8.5rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  color: #fff;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* "2004 -" a esquerda da foto */
+.footer-ano--esq {
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  margin-right: clamp(16px, 3vw, 48px);
+}
+
+/* "- 2026" a direita da foto */
+.footer-ano--dir {
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  margin-left: clamp(16px, 3vw, 48px);
+}
+
+/* assinatura manuscrita abaixo da foto */
+.footer-palco {
+  --ano-mobile: clamp(2.2rem, min(16vw, 12svh), 7rem);
+}
+
+.footer-assinatura {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: clamp(8px, 2vh, 24px) 0 0;
+  text-align: center;
+  font-family: 'Universal Exploration', 'Pinyon Script', 'Snell Roundhand', 'Brush Script MT', cursive;
+  font-size: clamp(2.5rem, min(7vw, 9svh), 6rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: #fff;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* telas estreitas: um em cima, outro embaixo */
+@media (max-width: 900px) {
+  .footer-ano {
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: auto;
+    justify-content: center;
+    margin: 0;
+    font-size: clamp(2.2rem, min(16vw, 12svh), 7rem);
+  }
+
+  .footer-ano--esq {
+    bottom: 100%;
+    margin-bottom: clamp(10px, 2.5vw, 24px);
+  }
+
+  .footer-ano--dir {
+    top: 100%;
+    margin-top: clamp(10px, 2.5vw, 24px);
+  }
+
+  .footer-assinatura {
+    margin-top: calc(var(--ano-mobile) * 0.85 + clamp(10px, 2.5vw, 24px) * 2);
+  }
+}

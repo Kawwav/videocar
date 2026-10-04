@@ -4,6 +4,10 @@
   padding: clamp(72px, 14vh, 160px) 5vw clamp(72px, 14vh, 160px);
   background-color: #ffffff;
   color: #111;
+  /* fica na frente do footer; as bolhas penduram na borda de baixo */
+  position: relative;
+  z-index: 1;
+  --u: clamp(0.5px, 0.08vw, 1px); /* escala das bolhas (igual ao .footer-revelar) */
 }
 
 .marcas-titulo {
@@ -46,4 +50,27 @@
   .marcas-grade {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* borda de baixo feita de bolhas brancas de tamanhos diferentes.
+   cada camada repete um circulo; juntas, se fundem num contorno de bolhas */
+.marcas-bolhas {
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 0;
+  width: 100%;
+  height: calc(64 * var(--u));
+  pointer-events: none;
+  background-repeat: repeat-x;
+  background-image:
+    radial-gradient(circle calc(58 * var(--u)) at 30% calc(-6 * var(--u)), #fff calc(57 * var(--u)), transparent calc(58 * var(--u))),
+    radial-gradient(circle calc(40 * var(--u)) at 70% 0, #fff calc(39 * var(--u)), transparent calc(40 * var(--u))),
+    radial-gradient(circle calc(22 * var(--u)) at 30% calc(2 * var(--u)), #fff calc(21 * var(--u)), transparent calc(22 * var(--u))),
+    radial-gradient(circle calc(14 * var(--u)) at 40% calc(-4 * var(--u)), #fff calc(13 * var(--u)), transparent calc(14 * var(--u)));
+  background-size:
+    calc(260 * var(--u)) 100%,
+    calc(180 * var(--u)) 100%,
+    calc(130 * var(--u)) 100%,
+    calc(90 * var(--u)) 100%;
+  background-position: 0 0, 40px 0, 20px 0, 10px 0;
 }
