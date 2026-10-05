@@ -304,10 +304,10 @@ function Sobre() {
           />
 
           <h2 className="sobre-titulo">
-            <span>A GENTE</span>
-            <span>CONGELA</span>
-            <span>CARROS EM</span>
-            <span>VELOCIDADE</span>
+            <span>OLHE</span>
+<span>RÁPIDO.</span>
+<span>NÃO</span>
+<span>PISQUE.</span>
           </h2>
         </div>
 
