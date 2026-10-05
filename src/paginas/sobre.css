@@ -74,6 +74,10 @@
 .sobre-titulo span:nth-child(4) {
   margin-left: 1.3em;
 }
+.sobre-titulo span:nth-child(2),
+.sobre-titulo span:nth-child(3) {
+  padding-top: 0.14em;
+}
 
 .sobre-fade-overlay {
   position: absolute;

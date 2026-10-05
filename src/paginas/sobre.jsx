@@ -138,7 +138,7 @@ function Sobre() {
             if (!video) return
             const escondido = gsap.getProperty(conteudoRef.current, 'opacity') < 0.02
             if (escondido && !video.paused) video.pause()
-            else if (!escondido && video.paused) video.play().catch(() => {})
+            else if (!escondido && video.paused) video.play().catch(() => { })
           },
         },
       })
@@ -305,9 +305,9 @@ function Sobre() {
 
           <h2 className="sobre-titulo">
             <span>OLHE</span>
-<span>RÁPIDO.</span>
-<span>NÃO</span>
-<span>PISQUE.</span>
+            <span>RÁPIDO.</span>
+            <span>NÃO</span>
+            <span>PISQUE.</span>
           </h2>
         </div>
 
